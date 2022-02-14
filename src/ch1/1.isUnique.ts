@@ -28,9 +28,7 @@ export const isUniqueWithoutDataStructures: isUnique = (input: string) => {
 
 export const isUniqueUsingBitOperators: isUnique = (input: string) => {
   let bitMap = 0;
-  //   const aCharCode = "a".charCodeAt(0);
   for (const char of input) {
-    // const value = 1 << (char.charCodeAt(0) - aCharCode);
     const value = 1 << char.charCodeAt(0);
     if ((bitMap & value) > 0) {
       return false;
