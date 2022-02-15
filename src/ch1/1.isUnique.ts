@@ -1,4 +1,7 @@
-export const isUniqueUsingCharMap: isUnique = (input: string) => {
+export const usingCharMap: isUnique = (input: string) => {
+  if(input.length > 65536) {
+    return false;
+  }
   const cachedCharacters: { [char: string]: undefined } = {};
   return ![...input].some((char) => {
     if (char in cachedCharacters) {
@@ -9,13 +12,13 @@ export const isUniqueUsingCharMap: isUnique = (input: string) => {
   });
 };
 
-export const isUniqueAsPureFunction: isUnique = (input: string) =>
+export const asPureFunction: isUnique = (input: string) =>
   [...input].every(
     (char, index) =>
       ![...input].slice(index + 1).some((otherChar) => char === otherChar)
   );
 
-export const isUniqueWithoutDataStructures: isUnique = (input: string) => {
+export const withoutDataStructures: isUnique = (input: string) => {
   for (let i = 0; i < input.length; i++) {
     for (let j = i + 1; j < input.length; j++) {
       if (input[i] === input[j]) {
@@ -26,7 +29,7 @@ export const isUniqueWithoutDataStructures: isUnique = (input: string) => {
   return true;
 };
 
-export const isUniqueUsingBitOperators: isUnique = (input: string) => {
+export const usingBitOperators: isUnique = (input: string) => {
   let bitMap = 0;
   for (const char of input) {
     const value = 1 << char.charCodeAt(0);
