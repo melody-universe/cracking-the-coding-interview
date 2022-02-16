@@ -17,7 +17,6 @@ runTests(implementations, [
     input: generateUniqueStringOfLength(65537),
     inputDescription: "a string barely too long to have all unique characters",
     output: false,
-    include: ["usingCharMap"],
   },
   {
     input: generateUniqueStringOfLength(32),
