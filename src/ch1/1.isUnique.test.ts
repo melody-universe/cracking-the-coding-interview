@@ -1,25 +1,30 @@
-import runTests from "../runTests";
+import runTests from "../utils/runTests";
 import * as implementations from "./1.isUnique";
+import { IsUnique } from "./1.isUnique";
 
-runTests(implementations, [
-  { input: "", inputDescription: "empty string", output: true },
-  { input: "aa", output: false },
-  { input: "abcdefghijklmnopqrstuvwxyz", output: true },
-  { input: "🤓🤓", output: false },
-  { input: "🤓☕", output: true },
+runTests<IsUnique, typeof implementations>(implementations, [
   {
-    input: generateUniqueStringOfLength(65536),
+    input: [""],
+    inputDescription: "empty string",
+    output: true,
+  },
+  { input: ["aa"], output: false },
+  { input: ["abcdefghijklmnopqrstuvwxyz"], output: true },
+  { input: ["🤓🤓"], output: false },
+  { input: ["🤓☕"], output: true },
+  {
+    input: [generateUniqueStringOfLength(65536)],
     inputDescription: "the longest possible string of unique characters",
     output: true,
     include: ["usingCharMap"],
   },
   {
-    input: generateUniqueStringOfLength(65537),
+    input: [generateUniqueStringOfLength(65537)],
     inputDescription: "a string barely too long to have all unique characters",
     output: false,
   },
   {
-    input: generateUniqueStringOfLength(32),
+    input: [generateUniqueStringOfLength(32)],
     inputDescription: "the longest string processible using bitwise logic",
     output: true,
   },

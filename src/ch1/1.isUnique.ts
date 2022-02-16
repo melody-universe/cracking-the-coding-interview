@@ -47,4 +47,4 @@ export const usingBitOperators: IsUnique = withPigeonHolePrinciple((input) => {
   return true;
 });
 
-type IsUnique = (input: string) => boolean;
+export type IsUnique = (input: string) => boolean;

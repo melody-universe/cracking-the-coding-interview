@@ -1,7 +1,7 @@
 import getObjectKeys from "./getObjectKeys";
 
-export default function runTests<
-  Function extends (...args: any) => any,
+const runTests = <
+  Function extends (...args: any[]) => any,
   Implementations extends { [name: string]: Function }
 >(
   implementations: Implementations,
@@ -13,7 +13,7 @@ export default function runTests<
     include?: (keyof Implementations)[];
     exclude?: (keyof Implementations)[];
   }[]
-) {
+) =>
   getObjectKeys(implementations).forEach((name) =>
     describe(`${name}`, () =>
       tests
@@ -21,11 +21,11 @@ export default function runTests<
           ({ include, exclude }) =>
             (!include || include.includes(name)) && !exclude?.includes(name)
         )
-        .forEach(
-          ({ input, inputDescription, output, outputDescription, exclude }) =>
-            test(`${inputDescription ?? input} => ${
-              outputDescription ?? output
-            }`, () => expect(implementations[name](input)).toEqual(output))
+        .forEach(({ input, inputDescription, output, outputDescription }) =>
+          test(`${inputDescription ?? input} => ${
+            outputDescription ??
+            (typeof output === "object" ? JSON.stringify(output) : output)
+          }`, () => expect(implementations[name](...input)).toEqual(output))
         ))
   );
-}
+export default runTests;
