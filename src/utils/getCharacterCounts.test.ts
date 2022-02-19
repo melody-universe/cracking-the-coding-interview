@@ -1,7 +1,7 @@
 import runTests from "./runTests";
-import { implementations, GetCharacterCounts } from "./getCharacterCounts";
+import { implementations } from "./getCharacterCounts";
 
-runTests<GetCharacterCounts, typeof implementations>(implementations, [
+runTests(implementations, [
   {
     input: [""],
     inputDescription: "empty string",

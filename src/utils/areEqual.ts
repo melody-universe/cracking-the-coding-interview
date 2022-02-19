@@ -30,4 +30,4 @@ export const implementations = { usingForLoop, asPureFunction };
 const areEqual = asPureFunction;
 export default areEqual;
 
-export type AreEqual = <T>(a: T, b: T) => boolean;
+type AreEqual = <T>(a: T, b: T) => boolean;

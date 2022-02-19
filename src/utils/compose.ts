@@ -1,10 +1,12 @@
-import { Decorator } from "../types/Decorator";
-
 const compose =
-  <T>(...decorators: Decorator<T>[]) =>
-  (method: T) =>
-    decorators.reduceRight(
-      (composition, decorator) => decorator(composition),
-      method
-    );
+  <FirstFunction extends AnyFunction, LastFunction extends AnyFunction>(
+    ...fns: [FirstFunction, ...Function[], LastFunction]
+  ) =>
+  (...parameters: Parameters<FirstFunction>) =>
+    fns.reduceRight(
+      (prevFn, nextFn) => nextFn(...[prevFn].flat()),
+      parameters
+    ) as ReturnType<FirstFunction>;
 export default compose;
+
+type AnyFunction = (...args: any) => any;

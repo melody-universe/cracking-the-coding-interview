@@ -1,8 +1,7 @@
 import runTests from "../utils/runTests";
 import * as implementations from "./1.isUnique";
-import { IsUnique } from "./1.isUnique";
 
-runTests<IsUnique, typeof implementations>(implementations, [
+runTests(implementations, [
   {
     input: [""],
     inputDescription: "empty string",

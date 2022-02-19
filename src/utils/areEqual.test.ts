@@ -1,7 +1,7 @@
 import runTests from "./runTests";
-import { AreEqual, implementations } from "./areEqual";
+import { implementations } from "./areEqual";
 
-runTests<AreEqual, typeof implementations>(implementations, [
+runTests(implementations, [
   {
     input: ["a", 1],
     inputDescription: "two values of separate types",

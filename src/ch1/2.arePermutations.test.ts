@@ -1,8 +1,7 @@
 import runTests from "../utils/runTests";
 import * as implementations from "./2.arePermutations";
-import { ArePermutations } from "./2.arePermutations";
 
-runTests<ArePermutations, typeof implementations>(implementations, [
+runTests(implementations, [
   {
     input: ["abc", "abc"],
     output: true,

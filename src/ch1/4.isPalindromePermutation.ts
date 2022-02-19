@@ -1,21 +1,8 @@
-import getCharacterCounts from "../utils/getCharacterCounts";
-import getObjectKeys from "../utils/getObjectKeys";
+import atMost from "../utils/atMost";
+import getCharacterParities from "../utils/getCharacterParities";
+import getObjectValues from "../utils/getObjectValues";
 
-export const usingCharacterCountMap: IsPalindromePermutation = (input) => {
-  let uniqueCharacterFound = false;
-  const characterCounts = getCharacterCounts(input);
-  return getObjectKeys(characterCounts).every((character) => {
-    const count = characterCounts[character];
-    if (count === 1) {
-      if (uniqueCharacterFound) {
-        return false;
-      } else {
-        uniqueCharacterFound = true;
-      }
-      return true;
-    }
-    return (count & 1) === 0;
-  });
-};
+export const asPureFunction: IsPalindromePermutation = (input) =>
+  atMost(getObjectValues(getCharacterParities(input)), 1, (isOdd) => isOdd);
 
-export type IsPalindromePermutation = (input: string) => boolean;
+type IsPalindromePermutation = (input: string) => boolean;

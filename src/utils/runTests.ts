@@ -1,17 +1,14 @@
 import getObjectKeys from "./getObjectKeys";
 
-const runTests = <
-  Function extends (...args: any[]) => any,
-  Implementations extends { [name: string]: Function }
->(
-  implementations: Implementations,
+const runTests = <TFunction extends (...args: any[]) => any>(
+  implementations: { [name: string]: TFunction },
   tests: {
-    input: Parameters<Function>;
+    input: Parameters<TFunction>;
     inputDescription?: string;
-    output: ReturnType<Function>;
+    output: ReturnType<TFunction>;
     outputDescription?: string;
-    include?: (keyof Implementations)[];
-    exclude?: (keyof Implementations)[];
+    include?: (keyof typeof implementations)[];
+    exclude?: (keyof typeof implementations)[];
   }[]
 ) =>
   getObjectKeys(implementations).forEach((name) =>
@@ -22,7 +19,10 @@ const runTests = <
             (!include || include.includes(name)) && !exclude?.includes(name)
         )
         .forEach(({ input, inputDescription, output, outputDescription }) =>
-          test(`${inputDescription ?? input} => ${
+          test(`${
+            inputDescription ??
+            (typeof input === "object" ? JSON.stringify(input) : input)
+          } => ${
             outputDescription ??
             (typeof output === "object" ? JSON.stringify(output) : output)
           }`, () => expect(implementations[name](...input)).toEqual(output))

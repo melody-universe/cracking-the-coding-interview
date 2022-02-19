@@ -7,10 +7,10 @@ const withEquivalenceCheck: Decorator<ArePermutations> = (method) => (a, b) =>
   a == b ? true : method(a, b);
 const withLengthCheck: Decorator<ArePermutations> = (method) => (a, b) =>
   a.length === b.length ? method(a, b) : false;
-const withAllDecorators = compose(withEquivalenceCheck, withLengthCheck);
+const withAllDecorators = compose(withLengthCheck, withEquivalenceCheck);
 
 export const arePermutations: ArePermutations = withAllDecorators((a, b) =>
   areEqual(getCharacterCounts(a), getCharacterCounts(b))
 );
 
-export type ArePermutations = (a: string, b: string) => boolean;
+type ArePermutations = (a: string, b: string) => boolean;

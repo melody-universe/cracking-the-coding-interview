@@ -1,3 +1,5 @@
+import buildCharacterMap from "./buildCharacterMap";
+
 const usingForLoop: GetCharacterCounts = (input) => {
   const counts: CharacterCounts = {};
   for (const char of input) {
@@ -11,17 +13,11 @@ const usingForLoop: GetCharacterCounts = (input) => {
 };
 
 const asPureFunction: GetCharacterCounts = (input) =>
-  [...input].reduce<CharacterCounts>(
-    (counts, character) => ({
-      ...counts,
-      [character]: (counts[character] ?? 0) + 1,
-    }),
-    {}
-  );
+  buildCharacterMap(input, (count) => (count ?? 0) + 1);
 
 export const implementations = { usingForLoop, asPureFunction };
 const getCharacterCounts = asPureFunction;
 export default getCharacterCounts;
 
-export type GetCharacterCounts = (input: string) => CharacterCounts;
+type GetCharacterCounts = (input: string) => CharacterCounts;
 type CharacterCounts = { [char: string]: number };
