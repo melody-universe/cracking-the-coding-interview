@@ -1,10 +1,11 @@
+import buildCharacterMap from "../utils/buildCharacterMap";
+import compose from "../utils/compose";
+import reduceWhile from "../utils/reduceWhile";
+
 const withPigeonHolePrinciple = (method: IsUnique) => (input: string) =>
   input.length > 65536 ? false : method(input);
 
 export const usingCharMap: IsUnique = withPigeonHolePrinciple((input) => {
-  if (input.length > 65536) {
-    return false;
-  }
   const cachedCharacters: { [char: string]: undefined } = {};
   return ![...input].some((char) => {
     if (char in cachedCharacters) {
@@ -15,12 +16,28 @@ export const usingCharMap: IsUnique = withPigeonHolePrinciple((input) => {
   });
 });
 
-export const asPureFunction: IsUnique = withPigeonHolePrinciple((input) =>
-  [...input].every(
-    (char, index) =>
-      ![...input].slice(index + 1).some((otherChar) => char === otherChar)
-  )
+export const asPureFunctionBruteForce: IsUnique = withPigeonHolePrinciple(
+  (input) =>
+    [...input].every(
+      (char, index) =>
+        ![...input].slice(index + 1).some((otherChar) => char === otherChar)
+    )
 );
+
+export const asPureFunctionUsingReduceWhile: IsUnique = withPigeonHolePrinciple(
+  (input) =>
+    !!reduceWhile(
+      [...input],
+      (map, character) =>
+        character in (map as CharacterSet)
+          ? { returnValue: false, continue: false }
+          : {
+              returnValue: { ...(map as CharacterSet), [character]: null },
+            },
+      {} as boolean | CharacterSet
+    )
+);
+type CharacterSet = { [character: string]: null };
 
 export const withoutDataStructures: IsUnique = withPigeonHolePrinciple(
   (input) => {
