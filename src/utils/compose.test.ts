@@ -17,7 +17,7 @@ const createMockFunction = (inputArg?: Symbol) => {
 // (I o f)(x) <=> f(x)
 test("left-identity property", () => {
   const { fn, input, output } = createMockFunction();
-  const composition = compose(identityFunction, fn);
+  const composition = compose<Symbol>(identityFunction, fn);
 
   expect(composition(input)).toBe(output);
 });
@@ -25,7 +25,7 @@ test("left-identity property", () => {
 // (f o I)(x) <=> f(x)
 test("right-identity property", () => {
   const { fn, input, output } = createMockFunction();
-  const composition = compose(fn, identityFunction);
+  const composition = compose<Symbol>(fn, identityFunction);
 
   expect(composition(input)).toBe(output);
 });
@@ -36,8 +36,8 @@ test("associative property", () => {
   const { fn: g, output: gOutput } = createMockFunction(hOutput);
   const { fn: f } = createMockFunction(gOutput);
 
-  const leftComposition = compose(f, compose(g, h));
-  const rightComposition = compose(compose(f, g), h);
+  const leftComposition = compose<Symbol>(f, compose(g, h));
+  const rightComposition = compose<Symbol>(compose(f, g), h);
 
   expect(leftComposition(input)).toBe(rightComposition(input));
 });

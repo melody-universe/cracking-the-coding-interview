@@ -1,5 +1,3 @@
-import buildCharacterMap from "../utils/buildCharacterMap";
-import compose from "../utils/compose";
 import reduceWhile from "../utils/reduceWhile";
 
 const withPigeonHolePrinciple = (method: IsUnique) => (input: string) =>

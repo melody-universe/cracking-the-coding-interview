@@ -7,7 +7,7 @@ const withTypeCheck: Decorator<AreEqual> = (method) => (a, b) =>
   typeof a === typeof b ? method(a, b) : false;
 const withPrimitiveCheck: Decorator<AreEqual> = (method) => (a, b) =>
   isPrimitive(a) ? a === b : method(a, b);
-const withAllDecorators = compose(withPrimitiveCheck, withTypeCheck);
+const withAllDecorators = compose<AreEqual>(withPrimitiveCheck, withTypeCheck);
 
 const getCombinedKeys = <T>(a: T, b: T) => [
   ...new Set([...getObjectKeys(a), ...getObjectKeys(b)]),
