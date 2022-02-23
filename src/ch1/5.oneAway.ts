@@ -48,13 +48,15 @@ export const imperativeApproach: OneAway = withBranching([
 
 export const functionalApproach = withBranching([
   (original, edited) =>
-    using<number, boolean>(findDiscrepancyIndex(original, edited))(
+    using(
+      findDiscrepancyIndex(original, edited),
       (discrepancyIndex) =>
         original.slice(discrepancyIndex + 1) ===
         edited.slice(discrepancyIndex + 1)
     ),
   (original, edited) =>
-    using<number, boolean>(findDiscrepancyIndex(original, edited))(
+    using(
+      findDiscrepancyIndex(original, edited),
       (discrepancyIndex) =>
         original.slice(discrepancyIndex + 1) === edited.slice(discrepancyIndex)
     ),
