@@ -3,15 +3,14 @@ import { using } from "../utils/using";
 const withBranching: (branches: OneAwayBranches) => OneAway =
   ([oneSwap, oneRemoval]) =>
   (original, edited) =>
-    original === edited
-      ? true
-      : original.length === edited.length
+    original === edited ||
+    (original.length === edited.length
       ? oneSwap(original, edited)
       : Math.abs(original.length - edited.length) > 1
       ? false
       : edited.length > original.length
       ? oneRemoval(edited, original)
-      : oneRemoval(original, edited);
+      : oneRemoval(original, edited));
 
 export const imperativeApproach: OneAway = withBranching([
   (original, edited) => {
