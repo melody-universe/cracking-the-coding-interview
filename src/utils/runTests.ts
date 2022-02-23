@@ -21,7 +21,11 @@ const runTests = <TFunction extends (...args: any[]) => any>(
         .forEach(({ input, inputDescription, output, outputDescription }) =>
           test(`${
             inputDescription ??
-            (typeof input === "object" ? JSON.stringify(input) : input)
+            `${input.length > 1 ? "(" : ""}${input
+              .map((param) =>
+                typeof param === "object" ? JSON.stringify(param) : param
+              )
+              .join(", ")}${input.length > 1 ? ")" : ""}`
           } => ${
             outputDescription ??
             (typeof output === "object" ? JSON.stringify(output) : output)
