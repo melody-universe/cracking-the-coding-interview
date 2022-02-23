@@ -1,50 +1,43 @@
 import { Decorator } from "../types/Decorator";
 import compose from "../utils/compose";
-import { using } from "../utils/using";
 
 const withEmptyStringHandler: Decorator<CompressString> = (method) => (input) =>
   input === "" ? input : method(input);
 const withFinalCompressionCheck: Decorator<CompressString> =
-  (method) => (input) =>
-    using(method(input), (compressed) =>
-      compressed.length < input.length ? compressed : input
-    );
+  (compressString) => (input) =>
+    finalCompressionCheck(input, compressString(input));
+const finalCompressionCheck = (input: string, compressed: string) =>
+  compressed.length < input.length ? compressed : input;
 const withAllDecorators = compose<CompressString>(
   withFinalCompressionCheck,
   withEmptyStringHandler
 );
 
 export const imperativeApproach: CompressString = withAllDecorators((input) => {
+  const iterator = input[Symbol.iterator]();
   let compression = [];
-  let currentCharacter: string | null = null;
-  let currentCharacterCount = 0;
-  for (let i = 0; i < input.length; i++) {
-    if (input[i] === currentCharacter) {
+  let currentCharacter = iterator.next().value;
+  let currentCharacterCount = 1;
+  for (const character of iterator) {
+    if (character === currentCharacter) {
       currentCharacterCount++;
     } else {
-      if (currentCharacter !== null) {
-        compression.push(currentCharacter, currentCharacterCount);
-      }
-      currentCharacter = input[i];
+      compression.push(currentCharacter, currentCharacterCount);
+      currentCharacter = character;
       currentCharacterCount = 1;
     }
   }
-  compression.push(currentCharacter!, currentCharacterCount);
+  compression.push(currentCharacter, currentCharacterCount);
   return compression.join("");
 });
 
-export const functionalApproach: CompressString = withAllDecorators((input) =>
-  using(
-    [...input].reduce(addCharacterToState, initialState),
-    ({ compression, currentCharacter, currentCharacterCount }) =>
-      appendCharacter(
-        compression,
-        currentCharacter!,
-        currentCharacterCount
-      ).join("")
-  )
+export const functionalApproach: CompressString = withAllDecorators(
+  ([firstCharacter, ...rest]) =>
+    flattenState(
+      rest.reduce(reduceCharacterToState, createInitialState(firstCharacter))
+    )
 );
-const addCharacterToState = (
+const reduceCharacterToState = (
   {
     compression,
     currentCharacter,
@@ -53,50 +46,41 @@ const addCharacterToState = (
   character: string
 ) =>
   character === currentCharacter
-    ? bumpCharacterCount({
+    ? {
         compression,
         currentCharacter,
-        currentCharacterCount,
-      })
-    : setCurrentCharacter(
-        { compression, currentCharacter, currentCharacterCount },
-        character
-      );
-const bumpCharacterCount = ({
-  currentCharacterCount,
-  ...state
-}: FunctionalApproachState) => ({
-  currentCharacterCount: currentCharacterCount + 1,
-  ...state,
-});
-const setCurrentCharacter = (
-  {
-    compression,
-    currentCharacter,
-    currentCharacterCount,
-  }: FunctionalApproachState,
-  character: string
-) => ({
-  compression:
-    currentCharacter === null
-      ? compression
-      : appendCharacter(compression, currentCharacter, currentCharacterCount),
-  currentCharacter: character,
-  currentCharacterCount: 1,
-});
+        currentCharacterCount: currentCharacterCount + 1,
+      }
+    : {
+        compression: appendCharacter(
+          compression,
+          currentCharacter,
+          currentCharacterCount
+        ),
+        currentCharacter: character,
+        currentCharacterCount: 1,
+      };
 const appendCharacter = (
-  compression: any[],
+  compression: (string | number)[],
   character: string,
   count: number
 ) => compression.concat(character, count);
-const initialState: FunctionalApproachState = {
+const flattenState = ({
+  compression,
+  currentCharacter,
+  currentCharacterCount,
+}: FunctionalApproachState) =>
+  appendCharacter(compression, currentCharacter, currentCharacterCount).join(
+    ""
+  );
+const createInitialState = (firstCharacter: string) => ({
   compression: [],
-  currentCharacter: null,
-  currentCharacterCount: 0,
-};
+  currentCharacter: firstCharacter,
+  currentCharacterCount: 1,
+});
 type FunctionalApproachState = {
-  compression: any[];
-  currentCharacter: string | null;
+  compression: (string | number)[];
+  currentCharacter: string;
   currentCharacterCount: number;
 };
 
