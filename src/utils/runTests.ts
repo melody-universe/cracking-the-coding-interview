@@ -1,15 +1,18 @@
 import getObjectKeys from "./getObjectKeys";
 
-const runTests = <TFunction extends (...args: any[]) => any>(
+const runTests = <TInput, TOutput, TFunction extends (...args: any[]) => any>(
   implementations: { [name: string]: TFunction },
   tests: {
-    input: Parameters<TFunction>;
+    input: typeof runTest extends undefined ? Parameters<TFunction> : TInput;
     inputDescription?: string;
-    output: ReturnType<TFunction>;
+    output: typeof runTest extends undefined ? ReturnType<TFunction> : TOutput;
     outputDescription?: string;
     include?: (keyof typeof implementations)[];
     exclude?: (keyof typeof implementations)[];
-  }[]
+  }[],
+  runTest?: (implementation: TFunction, input: TInput, output: TOutput) => void,
+  createInputDescription?: (input: TInput) => string,
+  createOutputDescription?: (output: TOutput) => string
 ) =>
   getObjectKeys(implementations).forEach((name) =>
     describe(`${name}`, () =>
@@ -20,16 +23,25 @@ const runTests = <TFunction extends (...args: any[]) => any>(
         )
         .forEach(({ input, inputDescription, output, outputDescription }) =>
           test(`${
-            inputDescription ??
-            `${input.length > 1 ? "(" : ""}${input
-              .map((param) =>
-                typeof param === "object" ? JSON.stringify(param) : param
-              )
-              .join(", ")}${input.length > 1 ? ")" : ""}`
+            createInputDescription
+              ? createInputDescription(input)
+              : inputDescription ?? JSON.stringify(input)
           } => ${
-            outputDescription ??
-            (typeof output === "object" ? JSON.stringify(output) : output)
-          }`, () => expect(implementations[name](...input)).toEqual(output))
+            createOutputDescription
+              ? createOutputDescription(output)
+              : outputDescription ??
+                (typeof output === "object" ? JSON.stringify(output) : output)
+          }`, () => {
+            if (runTest) {
+              runTest(implementations[name], input, output);
+            } else {
+              expect(
+                implementations[name](
+                  ...(input as unknown as Parameters<TFunction>)
+                )
+              ).toEqual(output);
+            }
+          })
         ))
   );
 export default runTests;
