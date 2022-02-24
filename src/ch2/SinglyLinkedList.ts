@@ -14,6 +14,16 @@ export default class SinglyLinkedList<T> {
     return (node.next = new SinglyLinkedList(value));
   }
 
+  public toArray(): T[] {
+    const array: T[] = [this.value];
+    let node: SinglyLinkedList<T> = this;
+    while (node.next !== null) {
+      node = node.next;
+      array.push(node.value);
+    }
+    return array;
+  }
+
   static fromArray<T>(array: T[]) {
     const iterator = array[Symbol.iterator]();
     const list = new SinglyLinkedList<T>(iterator.next().value);
