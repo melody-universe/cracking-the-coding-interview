@@ -1,4 +1,4 @@
-export default class SinglyLinkedList<T> {
+export default class SinglyLinkedList<T = any> {
   public value: T;
   public next: SinglyLinkedList<T> | null = null;
 

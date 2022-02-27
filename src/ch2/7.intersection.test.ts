@@ -1,5 +1,4 @@
 import getObjectKeys from "../utils/getObjectKeys";
-import runTests from "../utils/runTests";
 import * as implementations from "./7.intersection";
 import SinglyLinkedList from "./SinglyLinkedList";
 
