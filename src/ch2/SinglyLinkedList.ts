@@ -6,12 +6,16 @@ export default class SinglyLinkedList<T> {
     this.value = value;
   }
 
-  public append(value: T): SinglyLinkedList<T> {
-    let node: SinglyLinkedList<T> = this;
-    while (node.next !== null) {
-      node = node.next;
+  public appendNode(node: SinglyLinkedList<T>): SinglyLinkedList<T> {
+    let tail: SinglyLinkedList<T> = this;
+    while (tail.next !== null) {
+      tail = tail.next;
     }
-    return (node.next = new SinglyLinkedList(value));
+    return (tail.next = node);
+  }
+
+  public append(value: T): SinglyLinkedList<T> {
+    return this.appendNode(new SinglyLinkedList(value));
   }
 
   public toArray(): T[] {
