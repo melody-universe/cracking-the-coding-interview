@@ -22,7 +22,11 @@ test("can initialize from an iterable", () => {
 
 describe("isEmpty", () => {
   test("initializes empty", () => expect(new Stack().isEmpty()).toEqual(true));
-  test("is empty when all items are removed", () => {
+  test("is not empty when items are present", () => {
+    const stack = new Stack([1, 2]);
+    expect(stack.isEmpty()).toEqual(false);
+  });
+  test("is empty when all items are popped", () => {
     const stack = new Stack<number>();
     stack.push(1).pop();
 
